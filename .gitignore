@@ -1,6 +1,6 @@
 /.vscode
 /MNIST_CSV
-
+*.png
 __pycache__/
 *.pyc
 .DS_Store
