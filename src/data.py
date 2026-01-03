@@ -43,3 +43,11 @@ exp_val =np.exp(shifted)
 y_hat =  exp_val / np.sum(exp_val, axis = 1, keepdims=True) #softmax calculation
 
 #calculating cross entropy loss
+N = y.shape[0]
+correct_probs = y_hat[np.arange(N), y] #for each number, go to the column of the expected value
+correct_probs = np.clip(correct_probs, 1e-12, 1.0) #avoids errors like log(0)
+loss = -np.mean(np.log(correct_probs)) #cross entropy loss formula
+
+#prints our lose and a sample of first 5 "correct" probabilities
+print(f"Loss: {loss}")
+print(f"first 5 correct probabilities: {correct_probs[:5]}")
