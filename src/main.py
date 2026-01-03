@@ -7,6 +7,8 @@ from data import (
     adjust_weights,
     predict,
     accuracy,
+    load_model,
+    show_wrong_predictions
 )
 import numpy as np
 
@@ -53,6 +55,7 @@ def main():
         y_hat_test, _ = softmax_and_loss(Z2_test, y_test)
         test_preds = predict(y_hat_test)
         test_acc = accuracy(test_preds, y_test)
+        show_wrong_predictions(x_test, y_test, y_hat_test, 25)
 
         print(
             f"Epoch {epoch+1}/{epochs} | "
@@ -60,7 +63,7 @@ def main():
             f"Train Accuracy: {epoch_acc/num_batches:.4f} | "
             f"Test Accuracy: {test_acc:.4f}"
         )
-    
+    np.savez("mnist_var.npz", W1=W1, B1=B1, W2=W2, B2=B2)
 
 
 if __name__ == "__main__":

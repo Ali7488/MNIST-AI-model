@@ -23,15 +23,6 @@ def importCSV(data_source):
     return x, y
 
 
-def visualize_Number(x, y):
-    # create an image of one of the numbers to visualize it
-    index = 50
-    image = x[index].reshape(28, 28)
-    plt.imshow(image, cmap="gray")
-    plt.title(f"Label: {y[index]}")
-    plt.axis("off")
-    plt.savefig("debug_image.png")
-    plt.close()
 
 
 # initializes weights to random values, returns W1,B1,W2,B1 in this order
@@ -108,3 +99,49 @@ def predict(y_hat):
 def accuracy(pred, y_true):
     # returns number of correct predictions
     return np.mean(pred == y_true)
+
+def load_model(path="mnist_var.npz"):
+    data = np.load(path)
+    W1 = data["W1"]
+    B1 = data["B1"]
+    W2 = data["W2"]
+    B2 = data["B2"]
+    return W1, B1, W2, B2
+
+def show_wrong_predictions(x, y, y_hat, max_show = 10):
+    #gather the predictions
+    preds = np.argmax(y_hat, axis = 1)
+
+    #get the indexes of the numbers it got wrong
+    wrong_id = np.where(preds != y)[0]
+
+    num_to_show = min(max_show, wrong_id.shape[0])
+    if num_to_show == 0:
+        print("No wrong predictions to show")
+        return
+    col = 5
+    rows = int(np.ceil(num_to_show/col))
+
+    fig, axis = plt.subplots(rows, col, figsize = (col*2, rows*2))
+    axis = axis.flatten()
+
+    for i in range(num_to_show):
+        idx = wrong_id[i]
+        image = x[idx].reshape(28,28)
+        
+        true_label = y[idx]
+        pred_label = preds[idx]
+        confidence = np.max(y_hat[idx])
+
+        axis[i].imshow(image, cmap = "gray")
+        axis[i].set_title(f"P: {pred_label} | A: {true_label} | C: {confidence*100:.2f}%", fontsize = 8)
+        axis[i].axis("off")
+
+    for j in range(num_to_show, len(axis)):
+        axis[j].axis("off")
+
+    plt.tight_layout()
+    plt.savefig("Incorrect predictions.png", dpi = 150)
+    plt.close()
+
+
