@@ -23,8 +23,6 @@ def importCSV(data_source):
     return x, y
 
 
-
-
 # initializes weights to random values, returns W1,B1,W2,B1 in this order
 def initialize_weights():
     # creates randomized weights for layer 1 and layer 2, and sets bias's to row vectors of 0
@@ -91,15 +89,17 @@ def adjust_weights(lr, W1, B1, W2, B2, dW1, dB1, dW2, dB2):
     return W1, B1, W2, B2
 
 
+# finds the highest probability per data entry
 def predict(y_hat):
-    # finds the highest probability per data entry
     return np.argmax(y_hat, axis=1)
 
 
+# returns number of correct predictions
 def accuracy(pred, y_true):
-    # returns number of correct predictions
     return np.mean(pred == y_true)
 
+
+# loads weights from an npz file
 def load_model(path="mnist_var.npz"):
     data = np.load(path)
     W1 = data["W1"]
@@ -108,40 +108,49 @@ def load_model(path="mnist_var.npz"):
     B2 = data["B2"]
     return W1, B1, W2, B2
 
-def show_wrong_predictions(x, y, y_hat, max_show = 10):
-    #gather the predictions
-    preds = np.argmax(y_hat, axis = 1)
 
-    #get the indexes of the numbers it got wrong
+# outputs png with a grid of all incorrect predictions
+def show_wrong_predictions(x, y, y_hat, max_show=10):
+    # gather the predictions
+    preds = np.argmax(y_hat, axis=1)
+
+    # get the indexes of the numbers it got wrong
     wrong_id = np.where(preds != y)[0]
 
+    # ensure were only showing the amount we want to show
     num_to_show = min(max_show, wrong_id.shape[0])
     if num_to_show == 0:
         print("No wrong predictions to show")
         return
-    col = 5
-    rows = int(np.ceil(num_to_show/col))
 
-    fig, axis = plt.subplots(rows, col, figsize = (col*2, rows*2))
+    # create a grid to display all the incorrect predictions
+    col = 5
+    rows = int(np.ceil(num_to_show / col))
+    fig, axis = plt.subplots(rows, col, figsize=(col * 2, rows * 2))
+
+    # flatten axis to a 1D array so its easier to index through
     axis = axis.flatten()
 
+    # display each image on the grid
     for i in range(num_to_show):
         idx = wrong_id[i]
-        image = x[idx].reshape(28,28)
-        
+        image = x[idx].reshape(28, 28)
+
         true_label = y[idx]
         pred_label = preds[idx]
         confidence = np.max(y_hat[idx])
 
-        axis[i].imshow(image, cmap = "gray")
-        axis[i].set_title(f"P: {pred_label} | A: {true_label} | C: {confidence*100:.2f}%", fontsize = 8)
+        axis[i].imshow(image, cmap="gray")
+        axis[i].set_title(
+            f"P: {pred_label} | A: {true_label} | C: {confidence*100:.2f}%", fontsize=8
+        )
         axis[i].axis("off")
 
+    # remove unneeded images
     for j in range(num_to_show, len(axis)):
         axis[j].axis("off")
 
+    # create the png
     plt.tight_layout()
-    plt.savefig("Incorrect predictions.png", dpi = 150)
+    plt.savefig("Incorrect predictions.png", dpi=150)
     plt.close()
-
-
