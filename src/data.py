@@ -2,12 +2,14 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+
 # import the mnist_test
-test_df = pd.read_csv("data/mnist_test.csv", header=None)
+train_df = pd.read_csv("data/mnist_train.csv", header=None)
 
 # seperates labels (0-9) into y and the pixel values into x
-y = test_df.iloc[:,0]
-x = test_df.iloc[:, 1:]
+y = train_df.iloc[:,0]
+x = train_df.iloc[:, 1:]
 
 # convert to numpy
 x = x.to_numpy()
@@ -63,8 +65,14 @@ A1_grad = Z2_grad @ W2.T
 grad_Z1 = A1_grad.copy()
 grad_Z1[Z1 <= 0] = 0
 dW1 = x.T @ grad_Z1
-dB1 = np.sum(grad_Z1, axis = 0, keepdim = True)
+dB1 = np.sum(grad_Z1, axis = 0, keepdims     = True)
 
+#learning rate and adjusting weights and biases
+lr = 0.1
+W2 -= lr*dW2
+B2 -= lr*dB2
+W1 -= lr*dW1
+B1 -= lr*dB1
 
-
+    
 
