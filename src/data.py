@@ -60,4 +60,11 @@ dW2 = A1.T @ Z2_grad
 dB2 = np.sum(Z2_grad, axis=0, keepdims=True)
 A1_grad = Z2_grad @ W2.T
 
+grad_Z1 = A1_grad.copy()
+grad_Z1[Z1 <= 0] = 0
+dW1 = x.T @ grad_Z1
+dB1 = np.sum(grad_Z1, axis = 0, keepdim = True)
+
+
+
 
