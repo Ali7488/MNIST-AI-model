@@ -17,7 +17,7 @@ def importCSV(data_source):
     y = y.to_numpy()
 
     # normalizing all pixel data to be between 0-1 instead of 0-255
-    x = x/255.0
+    x = x / 255.0
 
     # return number of entries
     return x, y
@@ -25,7 +25,7 @@ def importCSV(data_source):
 
 def visualize_Number(x, y):
     # create an image of one of the numbers to visualize it
-    index = 0
+    index = 50
     image = x[index].reshape(28, 28)
     plt.imshow(image, cmap="gray")
     plt.title(f"Label: {y[index]}")
@@ -99,10 +99,12 @@ def adjust_weights(lr, W1, B1, W2, B2, dW1, dB1, dW2, dB2):
     B1 -= lr * dB1
     return W1, B1, W2, B2
 
+
 def predict(y_hat):
     # finds the highest probability per data entry
     return np.argmax(y_hat, axis=1)
 
+
 def accuracy(pred, y_true):
-    #returns number of correct predictions
+    # returns number of correct predictions
     return np.mean(pred == y_true)

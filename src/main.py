@@ -36,7 +36,9 @@ def main():
             A1, Z1, Z2 = forward_pass(x_batch, W1, B1, W2, B2)
             y_hat, loss = softmax_and_loss(Z2, y_batch)
 
-            dW1, dB1, dW2, dB2 = calculate_gradients(A1, y_hat, W2, Z1, x_batch, y_batch)
+            dW1, dB1, dW2, dB2 = calculate_gradients(
+                A1, y_hat, W2, Z1, x_batch, y_batch
+            )
 
             W1, B1, W2, B2 = adjust_weights(lr, W1, B1, W2, B2, dW1, dB1, dW2, dB2)
 
@@ -52,10 +54,13 @@ def main():
         test_preds = predict(y_hat_test)
         test_acc = accuracy(test_preds, y_test)
 
-        print(f"Epoch {epoch+1}/{epochs} | "
-              f"Loss: {epoch_loss/num_batches:.4f} | "
-              f"Train Accuracy: {epoch_acc/num_batches:.4f} | "
-              f"Test Accuracy: {test_acc:.4f}")
+        print(
+            f"Epoch {epoch+1}/{epochs} | "
+            f"Loss: {epoch_loss/num_batches:.4f} | "
+            f"Train Accuracy: {epoch_acc/num_batches:.4f} | "
+            f"Test Accuracy: {test_acc:.4f}"
+        )
+    
 
 
 if __name__ == "__main__":
