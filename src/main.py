@@ -16,16 +16,33 @@ import numpy as np
 def main():
     epochs = 20
     batch_size = 256
-    lr = 0.20     # starting learning rate
+    lr = 0.20  # starting learning rate
     patience = 2  # threshold of bad epochs (accuracy went down)
     factor = 0.5  # amount to decrease lr by
+    min_change = 0.001
     best_test_acc = 0.0
     bad_epochs = 0
     min_lr = 1e-4
 
     x_train, y_train = importCSV("data/mnist_train.csv")
     x_test, y_test = importCSV("data/mnist_test.csv")
-    W1, B1, W2, B2 = initialize_weights()
+
+    while True:
+        loading = input("Are you using weights from a .npz file? (Y/N)")
+        if loading == "Y":
+            path = input("Enter file name: ").strip()
+            if not path.endswith(".npz"):
+                path += ".npz"
+            W1, B1, W2, B2 = load_model(path)
+            break
+        elif loading == "N":
+            W1, B1, W2, B2 = initialize_weights()
+            print("Starting with random weights...\n")
+            break
+        else:
+            print("Invalid input\n")
+            continue
+
     N = x_train.shape[0]
 
     for epoch in range(epochs):
@@ -68,13 +85,13 @@ def main():
         test_acc = accuracy(test_preds, y_test)
 
         # checking that accuracy is increasing, if it isnt, reduce lr for finer tuning
-        if test_acc > best_test_acc:
+        if test_acc > (best_test_acc + min_change):
             best_test_acc = test_acc
             bad_epochs = 0
         else:
             bad_epochs += 1
 
-        if bad_epochs > patience:
+        if bad_epochs >= patience:
             lr = max(min_lr, lr * factor)
             bad_epochs = 0
 
@@ -90,6 +107,8 @@ def main():
     # printing out predictions model got wrong
     show_wrong_predictions(x_test, y_test, y_hat_test, 25)
     # saves values of weights and biases into an npz file so it can be used
+    print("""saving into "mnist_var.npz"...\n""")
+
     np.savez("mnist_var.npz", W1=W1, B1=B1, W2=W2, B2=B2)
 
 
