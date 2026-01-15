@@ -60,12 +60,12 @@ def main():
             epoch_loss += loss
             epoch_acc += acc
             num_batches += 1
-
         
 
         # checking that accuracy is increasing, if it isnt, reduce lr for finer tuning
-        if epoch_acc > (best_epoch_acc + min_change):
-            best_test_acc = epoch
+        average_epoch_acc = epoch_acc/num_batches
+        if average_epoch_acc > (best_epoch_acc + min_change):
+            best_epoch_acc = average_epoch_acc
             bad_epochs = 0
         else:
             bad_epochs += 1
@@ -78,10 +78,10 @@ def main():
         print(
             f"Epoch {epoch+1}/{epochs} | "
             f"Loss: {epoch_loss/num_batches:.4f} | "
-            f"Train Accuracy: {epoch_acc/num_batches:.4f} | "
+            f"Train Accuracy: {average_epoch_acc:.4f} | "
             f"Learning Rate: {lr:.5f}"
         )
-        
+
     # saves values of weights and biases into an npz file so it can be used
     print("""saving into "mnist_var.npz"...\n""")
 

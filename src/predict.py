@@ -20,7 +20,7 @@ def main():
     x_test, y_test = importCSV("data/mnist_test.csv")
 
     # test run on mnist_test.csv to ensure model is learning
-    A1_test, Z1_test, Z2_test = forward_pass(x_test, W1, B1, W2, B2)
+    _ , _, Z2_test = forward_pass(x_test, W1, B1, W2, B2)
     y_hat_test, _ = softmax_and_loss(Z2_test,y_test);test_preds = predict(y_hat_test)
     test_acc = accuracy(test_preds, y_test)
 
