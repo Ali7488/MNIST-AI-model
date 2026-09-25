@@ -14,9 +14,13 @@ import numpy as np
 
 
 def main():
+    seed = 42
+    np.random.seed(seed)
+
     epochs = 20
     batch_size = 256
-    lr = 0.20  # starting learning rate
+    initial_lr = 0.20
+    lr = initial_lr  # starting learning rate
     patience = 2  # threshold of bad epochs (accuracy went down)
     factor = 0.5  # amount to decrease lr by
     min_change = 0.001
@@ -85,7 +89,17 @@ def main():
     # saves values of weights and biases into an npz file so it can be used
     print("""saving into "mnist_var.npz"...\n""")
 
-    np.savez("mnist_var.npz", W1=W1, B1=B1, W2=W2, B2=B2)
+    np.savez(
+        "mnist_var.npz",
+        W1=W1,
+        B1=B1,
+        W2=W2,
+        B2=B2,
+        seed=seed,
+        epochs=epochs,
+        batch_size=batch_size,
+        initial_lr=initial_lr,
+    )
 
 
 if __name__ == "__main__":
